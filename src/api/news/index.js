@@ -41,6 +41,43 @@ const cloudinaryUploader3 = multer({
   }),
 }).single("docsImage");
 
+const cloudinaryUploaderArray = multer({
+  storage: new CloudinaryStorage({
+    cloudinary,
+    params: {
+      format: "jpeg",
+      folder: "ART",
+    },
+  }),
+}).array("newsArray");
+
+newsRouter.post(
+  "/:newsId/arrPics",
+  cloudinaryUploaderArray,
+  async (req, res, next) => {
+    try {
+      console.log(req.files);
+      const urlArr = req.files;
+      const arr = [];
+      urlArr.map((u) => arr.push(u.path));
+      const updatedNews = await NewsModel.findByIdAndUpdate(
+        req.params.newsId,
+        { images: arr },
+        { new: true, runValidators: true }
+      );
+      if (updatedNews) {
+        res.status(204).send(updatedNews);
+      } else {
+        next(
+          createHttpError(404, `User with id ${req.params.newsId} not found`)
+        );
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 newsRouter.post(
   "/:newsId/picture",
   cloudinaryUploader,

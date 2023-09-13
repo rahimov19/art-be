@@ -13,6 +13,7 @@ import {
 import usersRouter from "./api/users/index.js";
 import resumeRouter from "./api/resume/index.js";
 import newsRouter from "./api/news/index.js";
+import partnersRouter from "./api/partners/index.js";
 
 const server = express();
 const port = process.env.PORT || 3001;
@@ -37,6 +38,7 @@ server.use(express.json());
 server.use("/users", usersRouter);
 server.use("/resume", resumeRouter);
 server.use("/news", newsRouter);
+server.use("/partners", partnersRouter);
 
 //Adding error handlers
 server.use(badRequestHandler);
